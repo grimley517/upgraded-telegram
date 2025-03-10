@@ -59,16 +59,10 @@ public class PersonController : ControllerBase
             return NotFound();
         }
     }
-    
+
     [HttpPut("")]
-    public ActionResult Update(PersonViewModel person)
-    {
-        
-    }
+    public ActionResult Update(PersonViewModel person) { }
 
     [HttpPost("")]
-    public ActionResult Create(PersonViewModel person)
-    {
-        
-    }
+    public ActionResult Create(PersonViewModel person) { }
 }
