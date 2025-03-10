@@ -1,1 +1,2 @@
 dotnet-csharpier .
+dotnet test .
