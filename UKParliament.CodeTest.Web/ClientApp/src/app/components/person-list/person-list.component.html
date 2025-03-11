@@ -1,0 +1,31 @@
+<div class="person-list-container">
+  <div class="list-section">
+    <div class="header">
+      <h2>People</h2>
+      <button class="add-button" (click)="selectedPerson = {}">Add Person</button>
+    </div>
+    
+    <div class="people-list" *ngIf="people.length > 0">
+      <button class="person-item" 
+           *ngFor="let person of people" 
+           (click)="selectPerson(person)"
+           [class.selected]="selectedPerson?.id === person.id"
+           [attr.aria-label]="person.firstName + ' ' + person.lastName">
+        <app-person-item [person]="person"></app-person-item>
+      </button>
+    </div>
+    
+    <div class="no-people" *ngIf="people.length === 0">
+      <p>No people found. Click 'Add Person' to create one.</p>
+    </div>
+  </div>
+
+  <div class="form-section" *ngIf="selectedPerson">
+    <app-person-form
+      [person]="selectedPerson"
+      (saved)="onPersonSaved()"
+      (cancelled)="selectedPerson = null"
+      (deleted)="onPersonDeleted()">
+    </app-person-form>
+  </div>
+</div>

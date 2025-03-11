@@ -1,0 +1,70 @@
+.parliament-navbar {
+  background-color: #373151;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .navbar-logo {
+    height: 40px;
+    width: auto;
+  }
+
+  .navbar-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: white;
+  }
+
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: white;
+    }
+
+    &.active {
+      color: white;
+      position: relative;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background-color: white;
+      }
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .parliament-navbar {
+    .navbar-brand {
+      .navbar-logo {
+        height: 32px;
+      }
+
+      .navbar-title {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}

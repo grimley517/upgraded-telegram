@@ -1,0 +1,63 @@
+<div class="person-form">
+  <h2>{{isNew ? 'Add New Person' : 'Edit Person'}}</h2>
+
+  <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input id="firstName" type="text" formControlName="firstName" />
+      <div class="error" *ngIf="personForm.get('firstName')?.errors?.['required'] && personForm.get('firstName')?.touched">
+        First name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input id="lastName" type="text" formControlName="lastName" />
+      <div class="error" *ngIf="personForm.get('lastName')?.errors?.['required'] && personForm.get('lastName')?.touched">
+        Last name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+      <div class="error" *ngIf="personForm.get('email')?.errors?.['required'] && personForm.get('email')?.touched">
+        Email is required
+      </div>
+      <div class="error" *ngIf="personForm.get('email')?.errors?.['email'] && personForm.get('email')?.touched">
+        Please enter a valid email address
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="dateOfBirth">Date of Birth</label>
+      <input id="dateOfBirth" type="date" formControlName="dateOfBirth" />
+      <div class="error" *ngIf="personForm.get('dateOfBirth')?.errors?.['required'] && personForm.get('dateOfBirth')?.touched">
+        Date of birth is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="department">Department</label>
+      <select id="department" formControlName="departmentId">
+        <option value="">Select a department</option>
+        <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
+      </select>
+      <div class="error" *ngIf="personForm.get('departmentId')?.errors?.['required'] && personForm.get('departmentId')?.touched">
+        Department is required
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{errorMessage}}
+    </div>
+
+    <div class="button-group">
+      <button type="submit" class="submit-button" [disabled]="!personForm.valid">
+        {{isNew ? 'Create' : 'Save'}}
+      </button>
+      <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+      <button type="button" class="delete-button" *ngIf="!isNew" (click)="onDelete()">Delete</button>
+    </div>
+  </form>
+</div>
