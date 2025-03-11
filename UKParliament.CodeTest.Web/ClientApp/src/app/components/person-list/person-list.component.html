@@ -1,0 +1,22 @@
+<div class="person-list-container">
+  <div class="list-section">
+    <div class="header">
+      <h2>People</h2>
+      <a [routerLink]="['/person/new']" class="btn btn-parliament-secondary">Add Person</a>
+    </div>
+    
+    <div class="people-list" *ngIf="people.length > 0">
+      <div class="person-list-items">
+        <app-person-listitem 
+          *ngFor="let person of people" 
+          [person]="person"
+          (refreshList)="loadPeople()">
+        </app-person-listitem>
+      </div>
+    </div>
+    
+    <div class="no-people" *ngIf="people.length === 0">
+      <p>No people found. Click 'Add Person' to create one.</p>
+    </div>
+  </div>
+</div>

@@ -1,20 +1,13 @@
 import { Component } from '@angular/core';
-import { PersonService } from '../../services/person.service';
+import { RouterModule } from '@angular/router';
+import { PersonListComponent } from '../person-list/person-list.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  standalone: true,
+  imports: [RouterModule, PersonListComponent]
 })
 export class HomeComponent {
-  constructor(private personService: PersonService) {
-    this.getPersonById(1);
-  }
-
-  getPersonById(id: number): void {
-    this.personService.getById(id).subscribe({
-      next: (result) => console.info(`User returned: ${JSON.stringify(result)}`),
-      error: (e) => console.error(`Error: ${e}`)
-    });
-  }
 }
