@@ -35,7 +35,7 @@ public class PersonRepositoryTests
         var result = repository.GetAllPersons();
 
         // Assert
-        Assert.Equal(2, result.Count);
+        Assert.Equal(5, result.Count);
         Assert.Contains(result, p => p.FirstName == "John" && p.LastName == "Doe");
         Assert.Contains(result, p => p.FirstName == "Jane" && p.LastName == "Smith");
     }

@@ -26,6 +26,34 @@ public class PersonManagerContext : DbContext
                 new Department { Id = 3, Name = "Finance" },
                 new Department { Id = 4, Name = "HR" }
             );
+        modelBuilder
+            .Entity<Person>()
+            .HasData(
+                new Person
+                {
+                    Id = 20,
+                    FirstName = "Harry",
+                    LastName = "Potter",
+                    DateOfBirth = new DateTime(2000, 1, 1),
+                    DepartmentId = 4
+                },
+                new Person
+                {
+                    Id = 21,
+                    FirstName = "Hermione",
+                    LastName = "Granger",
+                    DateOfBirth = new DateTime(2000, 1, 1),
+                    DepartmentId = 4
+                },
+                new Person
+                {
+                    Id = 23,
+                    FirstName = "Ronald",
+                    LastName = "Weasley",
+                    DateOfBirth = new DateTime(2000, 1, 1),
+                    DepartmentId = 4
+                }
+            );
     }
 
     public DbSet<Person> People { get; set; }
