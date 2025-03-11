@@ -5,17 +5,21 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { PersonListComponent } from './components/person-list/person-list.component';
+import { PersonItemComponent } from './components/person-item/person-item.component';
+import { PersonFormComponent } from './components/person-form/person-form.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent
+    AppComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    HomeComponent,
+    PersonFormComponent,
     RouterModule.forRoot([
-      { path: '', component: PersonListComponent, pathMatch: 'full' }
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'person/new', component: PersonFormComponent },
+      { path: 'person/:id', component: PersonItemComponent }
     ])
   ],
   providers: [

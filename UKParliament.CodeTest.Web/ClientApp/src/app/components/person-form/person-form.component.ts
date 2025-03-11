@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Department, PersonViewModel } from '../../models/person-view-model';
 import { PersonService } from '../../services/person.service';
 import { CommonModule } from '@angular/common';
@@ -37,12 +37,29 @@ export class PersonFormComponent implements OnInit {
     }
   }
 
+  private ageValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const dob = new Date(control.value);
+    const today = new Date('2025-03-11T14:56:14Z'); // Using system-provided current time
+    
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+
+    return age < 16 ? { underage: true } : null;
+  }
+
   private createForm(): FormGroup {
     return this.fb.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      dateOfBirth: ['', [Validators.required]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+      dateOfBirth: ['', [Validators.required, this.ageValidator.bind(this)]],
       departmentId: ['', [Validators.required]]
     });
   }

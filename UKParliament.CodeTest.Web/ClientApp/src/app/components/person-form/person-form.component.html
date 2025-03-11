@@ -19,21 +19,13 @@
     </div>
 
     <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
-      <div class="error" *ngIf="personForm.get('email')?.errors?.['required'] && personForm.get('email')?.touched">
-        Email is required
-      </div>
-      <div class="error" *ngIf="personForm.get('email')?.errors?.['email'] && personForm.get('email')?.touched">
-        Please enter a valid email address
-      </div>
-    </div>
-
-    <div class="form-group">
       <label for="dateOfBirth">Date of Birth</label>
       <input id="dateOfBirth" type="date" formControlName="dateOfBirth" />
       <div class="error" *ngIf="personForm.get('dateOfBirth')?.errors?.['required'] && personForm.get('dateOfBirth')?.touched">
         Date of birth is required
+      </div>
+      <div class="error" *ngIf="personForm.get('dateOfBirth')?.errors?.['underage'] && personForm.get('dateOfBirth')?.touched">
+        Person must be at least 16 years old
       </div>
     </div>
 

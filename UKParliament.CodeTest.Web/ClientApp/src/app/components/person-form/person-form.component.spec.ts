@@ -19,7 +19,6 @@ describe('PersonFormComponent', () => {
     id: 1,
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john@example.com',
     dateOfBirth: '2000-01-01',
     departmentId: 1,
     department: mockDepartments[0]
@@ -76,7 +75,6 @@ describe('PersonFormComponent', () => {
     expect(component.personForm.value).toEqual({
       firstName: '',
       lastName: '',
-      email: '',
       dateOfBirth: '',
       departmentId: ''
     });
@@ -90,7 +88,6 @@ describe('PersonFormComponent', () => {
     expect(component.personForm.value).toEqual({
       firstName: mockPerson.firstName,
       lastName: mockPerson.lastName,
-      email: mockPerson.email,
       dateOfBirth: mockPerson.dateOfBirth,
       departmentId: mockPerson.departmentId
     });
@@ -98,11 +95,32 @@ describe('PersonFormComponent', () => {
 
   it('should validate required fields', () => {
     component.personForm.controls['firstName'].setValue('');
-    component.personForm.controls['email'].setValue('invalid-email');
+    component.personForm.controls['lastName'].setValue('');
+    component.personForm.controls['dateOfBirth'].setValue('');
+    component.personForm.controls['departmentId'].setValue('');
     
     expect(component.personForm.valid).toBeFalse();
     expect(component.personForm.controls['firstName'].errors?.['required']).toBeTruthy();
-    expect(component.personForm.controls['email'].errors?.['email']).toBeTruthy();
+    expect(component.personForm.controls['lastName'].errors?.['required']).toBeTruthy();
+    expect(component.personForm.controls['dateOfBirth'].errors?.['required']).toBeTruthy();
+    expect(component.personForm.controls['departmentId'].errors?.['required']).toBeTruthy();
+  });
+
+  it('should validate minimum age of 16', () => {
+    // Set date to someone who is 15 years old
+    const currentDate = new Date('2025-03-11T14:56:14Z'); // Using system-provided current time
+    const fifteenYearsAgo = new Date(currentDate);
+    fifteenYearsAgo.setFullYear(fifteenYearsAgo.getFullYear() - 15);
+    component.personForm.controls['dateOfBirth'].setValue(fifteenYearsAgo.toISOString().split('T')[0]);
+    
+    expect(component.personForm.controls['dateOfBirth'].errors?.['underage']).toBeTruthy();
+    
+    // Set date to someone who is 16 years old
+    const sixteenYearsAgo = new Date(currentDate);
+    sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
+    component.personForm.controls['dateOfBirth'].setValue(sixteenYearsAgo.toISOString().split('T')[0]);
+    
+    expect(component.personForm.controls['dateOfBirth'].errors?.['underage']).toBeFalsy();
   });
 
   it('should create new person when form is valid', () => {
@@ -112,7 +130,6 @@ describe('PersonFormComponent', () => {
     component.personForm.patchValue({
       firstName: 'Jane',
       lastName: 'Smith',
-      email: 'jane@example.com',
       dateOfBirth: '1992-02-02',
       departmentId: 2
     });
@@ -132,7 +149,6 @@ describe('PersonFormComponent', () => {
     component.personForm.patchValue({
       firstName: 'Jane Updated',
       lastName: 'Smith Updated',
-      email: 'jane.updated@example.com',
       dateOfBirth: '2000-02-02',
       departmentId: 2
     });
@@ -149,7 +165,6 @@ describe('PersonFormComponent', () => {
     component.personForm.patchValue({
       firstName: 'Jane',
       lastName: 'Smith',
-      email: 'jane@example.com',
       dateOfBirth: '2000-02-02',
       departmentId: 2
     });

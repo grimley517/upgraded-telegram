@@ -5,6 +5,8 @@ import { PersonViewModel } from '../../models/person-view-model';
 import { of, throwError } from 'rxjs';
 import { PersonFormComponent } from '../person-form/person-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PersonListComponent', () => {
   let component: PersonListComponent;
@@ -16,7 +18,6 @@ describe('PersonListComponent', () => {
       id: 1,
       firstName: 'John',
       lastName: 'Doe',
-      email: 'john@example.com',
       dateOfBirth: '1990-01-01',
       departmentId: 1,
       department: { id: 1, name: 'IT' }
@@ -25,7 +26,6 @@ describe('PersonListComponent', () => {
       id: 2,
       firstName: 'Jane',
       lastName: 'Smith',
-      email: 'jane@example.com',
       dateOfBirth: '1992-02-02',
       departmentId: 2,
       department: { id: 2, name: 'HR' }
@@ -39,6 +39,8 @@ describe('PersonListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
+        RouterTestingModule,
+        RouterModule,
         PersonListComponent,
         PersonFormComponent
       ],
@@ -74,28 +76,5 @@ describe('PersonListComponent', () => {
     expect(errorSpy).toHaveBeenCalledWith('Error loading people:', jasmine.any(Error));
   });
 
-  it('should select person when clicked', () => {
-    component.selectPerson(mockPeople[0]);
-    expect(component.selectedPerson).toEqual(mockPeople[0]);
-  });
 
-  it('should clear selected person when person is saved', () => {
-    component.selectedPerson = mockPeople[0];
-    const getAllSpy = personService.getAll;
-    
-    component.onPersonSaved();
-    
-    expect(component.selectedPerson).toBeNull();
-    expect(getAllSpy).toHaveBeenCalledTimes(2); // Once in init, once after save
-  });
-
-  it('should clear selected person when person is deleted', () => {
-    component.selectedPerson = mockPeople[0];
-    const getAllSpy = personService.getAll;
-    
-    component.onPersonDeleted();
-    
-    expect(component.selectedPerson).toBeNull();
-    expect(getAllSpy).toHaveBeenCalledTimes(2); // Once in init, once after delete
-  });
 });

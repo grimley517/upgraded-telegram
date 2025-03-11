@@ -63,6 +63,7 @@
   background-color: white;
   text-align: left;
   display: block;
+  position: relative;
 
   &:hover, &:focus {
     border-color: #373151;
@@ -72,6 +73,31 @@
   &.selected {
     background-color: #373151;
     color: white;
+
+    .view-details {
+      color: white;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .view-details {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    color: #373151;
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: rgba(55, 49, 81, 0.1);
+      text-decoration: none;
+    }
   }
 
   h3 {
