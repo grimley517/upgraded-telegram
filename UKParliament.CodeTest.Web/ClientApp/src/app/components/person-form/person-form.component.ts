@@ -43,7 +43,7 @@ export class PersonFormComponent implements OnInit {
     }
 
     const dob = new Date(control.value);
-    const today = new Date('2025-03-11T14:56:14Z'); // Using system-provided current time
+    const today = new Date();
     
     let age = today.getFullYear() - dob.getFullYear();
     const monthDiff = today.getMonth() - dob.getMonth();

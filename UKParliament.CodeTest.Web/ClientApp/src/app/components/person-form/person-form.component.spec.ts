@@ -106,17 +106,41 @@ describe('PersonFormComponent', () => {
     expect(component.personForm.controls['departmentId'].errors?.['required']).toBeTruthy();
   });
 
+  it('should validate name length constraints', () => {
+    // Test minimum length (2 characters)
+    component.personForm.controls['firstName'].setValue('a');
+    component.personForm.controls['lastName'].setValue('b');
+    component.personForm.controls['firstName'].markAsTouched();
+    component.personForm.controls['lastName'].markAsTouched();
+    
+    expect(component.personForm.controls['firstName'].hasError('minlength')).toBeTrue();
+    expect(component.personForm.controls['lastName'].hasError('minlength')).toBeTrue();
+
+    // Test valid length
+    component.personForm.controls['firstName'].setValue('John');
+    component.personForm.controls['lastName'].setValue('Doe');
+    
+    expect(component.personForm.controls['firstName'].errors).toBeNull();
+    expect(component.personForm.controls['lastName'].errors).toBeNull();
+
+    // Test maximum length (20 characters)
+    component.personForm.controls['firstName'].setValue('ThisNameIsWayTooLongForTheForm');
+    component.personForm.controls['lastName'].setValue('ThisSurnameIsAlsoTooLong');
+    
+    expect(component.personForm.controls['firstName'].hasError('maxlength')).toBeTrue();
+    expect(component.personForm.controls['lastName'].hasError('maxlength')).toBeTrue();
+  });
+
   it('should validate minimum age of 16', () => {
     // Set date to someone who is 15 years old
-    const currentDate = new Date('2025-03-11T14:56:14Z'); // Using system-provided current time
-    const fifteenYearsAgo = new Date(currentDate);
+    const fifteenYearsAgo = new Date();
     fifteenYearsAgo.setFullYear(fifteenYearsAgo.getFullYear() - 15);
     component.personForm.controls['dateOfBirth'].setValue(fifteenYearsAgo.toISOString().split('T')[0]);
     
     expect(component.personForm.controls['dateOfBirth'].errors?.['underage']).toBeTruthy();
     
     // Set date to someone who is 16 years old
-    const sixteenYearsAgo = new Date(currentDate);
+    const sixteenYearsAgo = new Date();
     sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
     component.personForm.controls['dateOfBirth'].setValue(sixteenYearsAgo.toISOString().split('T')[0]);
     
