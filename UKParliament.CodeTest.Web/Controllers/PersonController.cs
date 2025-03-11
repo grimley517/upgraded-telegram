@@ -30,7 +30,7 @@ public class PersonController : ControllerBase
     {
         var people = _personService.GetAllPersons();
         var vmPeople = people.Select(person => PersonViewModel.ToVieModel(person)).ToList();
-        return Ok(vmPeople);
+        return vmPeople;
     }
 
     /// <summary>
@@ -45,14 +45,16 @@ public class PersonController : ControllerBase
     /// <returns>details of person with id requested</returns>
     /// <response code="200"> successfully returns user</response>
     /// <response code="404"> User does not exist </response>
-    [Route("{id:int}")]
-    [HttpGet]
+    [HttpGet("{id:int}", Name = "GetPerson")]
     public ActionResult<PersonViewModel> GetById(int id)
     {
         try
         {
             var person = _personService.GetPersonWithId(id);
-            return Ok(PersonViewModel.ToVieModel(person));
+            var vm = PersonViewModel.ToVieModel(person);
+            vm.Links.Add(new LinkResource(Url.Link("GetPerson", person.Id), "self", "GET"));
+
+            return Ok();
         }
         catch
         {
@@ -61,8 +63,14 @@ public class PersonController : ControllerBase
     }
 
     [HttpPut("")]
-    public ActionResult Update(PersonViewModel person) { }
+    public ActionResult Update(PersonViewModel person)
+    {
+        throw new NotImplementedException();
+    }
 
     [HttpPost("")]
-    public ActionResult Create(PersonViewModel person) { }
+    public ActionResult Create(PersonViewModel person)
+    {
+        throw new NotImplementedException();
+    }
 }

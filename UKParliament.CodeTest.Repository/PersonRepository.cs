@@ -21,27 +21,27 @@ public class PersonRepository : IPersonRepository
     {
         var result = _context.People.Include(person => person.Department).AsNoTracking();
         //Todo: consider pagination
-        return result.Select(dataperson => dataperson.Map()).ToList();
+        return result.Select(dataPerson => dataPerson.Map()).ToList();
     }
 
     public Person? GetPersonWithId(int id)
     {
-        var dataperson = _context
+        var dataPerson = _context
             .People.Where(p => p.Id == id)
             .Include(p => p.Department)
             .AsNoTracking();
-        return dataperson.SingleOrDefault()?.Map();
+        return dataPerson.SingleOrDefault()?.Map();
     }
 
     public async Task<int?> UpdatePerson(Person person)
     {
         try
         {
-            var dataperson = await _context.People.SingleAsync(p => p.Id == person.Id);
+            var dataPerson = await _context.People.SingleAsync(p => p.Id == person.Id);
             var updatePerson = person.MapPersonToData();
-            dataperson = updatePerson;
+            dataPerson = updatePerson;
             await _context.SaveChangesAsync();
-            return dataperson.Id;
+            return dataPerson.Id;
         }
         catch (InvalidOperationException ioe)
         {
@@ -57,9 +57,11 @@ public class PersonRepository : IPersonRepository
 
     public async Task<int?> CreatePerson(Person person)
     {
-        var dataperson = person.MapPersonToData();
-        await _context.People.AddAsync(dataperson);
+        var dataPerson = person.MapPersonToData();
+        var dataDepartment = _context.Departments.Single(x => x.Id == dataPerson.DepartmentId);
+        dataPerson.Department = dataDepartment;
+        await _context.People.AddAsync(dataPerson);
         await _context.SaveChangesAsync();
-        return dataperson.Id;
+        return dataPerson.Id;
     }
 }

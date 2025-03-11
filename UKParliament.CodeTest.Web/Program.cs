@@ -1,8 +1,7 @@
-using System.Collections.Immutable;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using UKParliament.CodeTest.Application.Application;
+using UKParliament.CodeTest.Application.Application.Interfaces;
 using UKParliament.CodeTest.Data;
-using UKParliament.CodeTest.Services;
 
 namespace UKParliament.CodeTest.Web;
 
@@ -12,14 +11,14 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var services = builder.Services;
-
+        //todo: add swagger
         // Add services to the container.
 
         services.AddControllersWithViews();
         services.AddDbContext<PersonManagerContext>(op => op.UseInMemoryDatabase("PersonManager"));
-        services.AddScoped<IPersonService, PersonService>();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddPersonRepository();
+        services.AddApplicationServices();
 
         var app = builder.Build();
 

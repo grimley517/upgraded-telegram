@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using UKParliament.CodeTest.Application.Application.Interfaces;
+using UKParliament.CodeTest.Application.Application.Validators;
 using UKParliament.CodeTest.Data;
 using Person = UKParliament.CodeTest.Application.Domain.Person;
 
@@ -15,7 +16,7 @@ public class PersonServiceTests
     public PersonServiceTests()
     {
         mRepository = new Mock<IPersonRepository>();
-        serviceUnderTest = new PersonService(mRepository.Object);
+        serviceUnderTest = new PersonService(mRepository.Object, new PersonValidator());
     }
 
     [Fact]

@@ -2,7 +2,7 @@
 
 namespace UKParliament.CodeTest.Web.ViewModels;
 
-public class PersonViewModel
+public class PersonViewModel : HyperMediaViewModel
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
