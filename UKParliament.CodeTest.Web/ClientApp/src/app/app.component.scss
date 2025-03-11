@@ -1,41 +1,5 @@
 
-// Color variables
-$parliament-purple: #373151;
-$parliament-white: #ffffff;
-
-// Button mixins
-@mixin parliament-button-primary {
-  background-color: $parliament-purple;
-  color: $parliament-white;
-  border: 1px solid $parliament-purple;
-  &:hover {
-    background-color: darken($parliament-purple, 10%);
-    border-color: darken($parliament-purple, 10%);
-  }
-}
-
-@mixin parliament-button-secondary {
-  background-color: $parliament-white;
-  color: $parliament-purple;
-  border: 1px solid $parliament-purple;
-  &:hover {
-    background-color: rgba($parliament-purple, 0.1);
-  }
-}
-
-// Global button styles
-:root {
-  --parliament-purple: #{$parliament-purple};
-  --parliament-white: #{$parliament-white};
-}
-
-.btn-parliament-primary {
-  @include parliament-button-primary;
-}
-
-.btn-parliament-secondary {
-  @include parliament-button-secondary;
-}
+@import '../../styles';
 
 .parliament-navbar {
   background-color: $parliament-purple;
@@ -94,7 +58,7 @@ $parliament-white: #ffffff;
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 990px) {
   .parliament-navbar {
     .navbar-brand {
       .navbar-logo {
