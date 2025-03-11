@@ -11,6 +11,13 @@ public class PersonManagerContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Department>().HasKey(d => d.Id);
+        modelBuilder.Entity<Person>().HasKey(p => p.Id);
+        modelBuilder
+            .Entity<Person>()
+            .HasOne(p => p.Department)
+            .WithMany(d => d.People)
+            .HasForeignKey(p => p.DepartmentId);
         modelBuilder
             .Entity<Department>()
             .HasData(
