@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { PersonService } from './person.service';
-import { PersonViewModel, Department } from '../models/person-view-model';
+import { PersonViewModel } from '../models/person-view-model';
 
 describe('PersonService', () => {
   let service: PersonService;
@@ -144,7 +144,7 @@ describe('PersonService', () => {
         expect(person).toEqual(updatedPerson);
       });
 
-      const req = httpMock.expectOne(`${baseUrl}api/person/1`);
+      const req = httpMock.expectOne(`${baseUrl}api/person`);
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(updatedPerson);
       req.flush(updatedPerson);
@@ -156,7 +156,7 @@ describe('PersonService', () => {
         firstName: 'NonExistent',
         lastName: 'Person',
         dateOfBirth: '2025-03-11',
-        departmentId: 1
+        departmentId: 999
       };
 
       service.update(nonExistentPerson).subscribe({
@@ -165,60 +165,23 @@ describe('PersonService', () => {
         }
       });
 
-      const req = httpMock.expectOne(`${baseUrl}api/person/999`);
-      req.flush('Person not found', { status: 404, statusText: 'Not Found' });
-    });
-  });
-
-  describe('delete', () => {
-    it('should delete a person', () => {
-      service.delete(1).subscribe(response => {
-        expect(response).toBeNull();
-      });
-
-      const req = httpMock.expectOne(`${baseUrl}api/person/1`);
-      expect(req.request.method).toBe('DELETE');
-      req.flush(null);
-    });
-
-    it('should handle error when deleting person fails', () => {
-      service.delete(999).subscribe({
-        error: error => {
-          expect(error.status).toBe(404);
-        }
-      });
-
-      const req = httpMock.expectOne(`${baseUrl}api/person/999`);
+      const req = httpMock.expectOne(`${baseUrl}api/person`);
       req.flush('Person not found', { status: 404, statusText: 'Not Found' });
     });
   });
 
   describe('getDepartments', () => {
     it('should return all departments', () => {
-      const mockDepartments: Department[] = [
-        { id: 1, name: 'HR' },
-        { id: 2, name: 'IT' },
-        { id: 3, name: 'Finance' }
+      const expectedDepartments = [
+        { id: 1, name: 'Information Technology' },
+        { id: 2, name: 'Human Resources' },
+        { id: 3, name: 'Finance' },
+        { id: 4, name: 'Administration' }
       ];
 
       service.getDepartments().subscribe(departments => {
-        expect(departments).toEqual(mockDepartments);
+        expect(departments).toEqual(expectedDepartments);
       });
-
-      const req = httpMock.expectOne(`${baseUrl}api/department`);
-      expect(req.request.method).toBe('GET');
-      req.flush(mockDepartments);
-    });
-
-    it('should handle error when getting departments fails', () => {
-      service.getDepartments().subscribe({
-        error: error => {
-          expect(error.status).toBe(500);
-        }
-      });
-
-      const req = httpMock.expectOne(`${baseUrl}api/department`);
-      req.flush('Error fetching departments', { status: 500, statusText: 'Internal Server Error' });
     });
   });
 });

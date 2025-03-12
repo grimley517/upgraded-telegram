@@ -1,4 +1,4 @@
-@import '../../../styles';
+@import '../../../styles.scss';
 
 .person-form {
   padding: 1rem;
@@ -28,7 +28,7 @@
 
     &:focus {
       outline: none;
-      border-color: #373151;
+      border-color: $parliament-purple;
     }
   }
 }
@@ -68,24 +68,11 @@
   }
 }
 
-.submit-button {
-  @extend .btn-parliament-primary;
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-}
-
-.cancel-button {
-  @extend .btn-parliament-secondary;
-}
-
-.delete-button {
-  background-color: #dc3545;
-  color: white;
-  margin-left: auto;
-
-  &:hover {
-    background-color: #c82333;
+.button-group {
+  button {
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
   }
 }

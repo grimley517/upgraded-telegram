@@ -1,10 +1,10 @@
 <div class="person-listitem">
-  <div class="person-name">
-    {{ person.lastName }}, {{ person.firstName }}
-  </div>
+    <div class="person-name">
+      {{ person.lastName }}, {{ person.firstName }}
+    </div>
   <div class="person-actions">
-    <button class="btn btn-parliament-primary" (click)="openViewModal()">View</button>
-    <button class="btn btn-parliament-secondary" (click)="openEditModal()">Edit</button>
+    <button class="btn-parliament-primary" (click)="openViewModal()">View</button>
+    <button class="btn-parliament-secondary" (click)="openEditModal()">Edit</button>
   </div>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Person Details</h5>
-        <button type="button" class="btn btn-parliament-secondary" (click)="closeViewModal()" aria-label="Close view modal">
+        <button type="button" class="btn-parliament-secondary" (click)="closeViewModal()" aria-label="Close view modal">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -31,7 +31,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Edit Person</h5>
-        <button type="button" class="btn btn-parliament-secondary" (click)="closeEditModal()" aria-label="Close edit modal">
+        <button type="button" class="btn-parliament-secondary" (click)="closeEditModal()" aria-label="Close edit modal">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -39,8 +39,7 @@
         <app-person-form 
           [person]="person"
           (saved)="onPersonSaved()"
-          (cancelled)="closeEditModal()"
-          (deleted)="onPersonDeleted()">
+          (cancelled)="closeEditModal()">
         </app-person-form>
       </div>
     </div>

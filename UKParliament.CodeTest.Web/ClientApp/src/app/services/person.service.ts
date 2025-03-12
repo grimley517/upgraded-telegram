@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Department, PersonViewModel } from '../models/person-view-model';
+import { Observable, of } from 'rxjs';
+import { PersonViewModel } from '../models/person-view-model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,14 +25,16 @@ export class PersonService {
   }
 
   update(person: PersonViewModel): Observable<PersonViewModel> {
-    return this.http.put<PersonViewModel>(`${this.baseUrl}${this.apiUrl}/${person.id}`, person);
+    return this.http.put<PersonViewModel>(`${this.baseUrl}${this.apiUrl}`, person);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}${this.apiUrl}/${id}`);
-  }
-
-  getDepartments(): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.baseUrl}api/department`);
+  getDepartments(): Observable<{id: number; name: string;}[]> {
+    const departments = [
+      { id: 1, name: 'Information Technology' },
+      { id: 2, name: 'Marketing' },
+      { id: 3, name: 'Finance' },
+      { id: 4, name: 'Human Resources' }
+    ];
+    return of(departments);
   }
 }

@@ -15,8 +15,8 @@ class MockPeopleComponent {}
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let router: Router;
   let location: Location;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,8 +31,8 @@ describe('AppComponent', () => {
       ]
     }).compileComponents();
 
-    router = TestBed.inject(Router);
     location = TestBed.inject(Location);
+    router = TestBed.inject(Router);
   });
 
   beforeEach(() => {
@@ -52,7 +52,7 @@ describe('AppComponent', () => {
   it('should display the UK Parliament logo', () => {
     const logo = fixture.debugElement.query(By.css('.navbar-logo'));
     expect(logo).toBeTruthy();
-    expect(logo.attributes['src']).toBe('/assets/logo.svg');
+    expect(logo.attributes['src']).toBe('/assets/logo-inversed.png');
     expect(logo.attributes['alt']).toBe('UK Parliament logo');
   });
 
@@ -82,6 +82,16 @@ describe('AppComponent', () => {
     await fixture.whenStable();
     
     expect(location.path()).toBe('/');
+  });
+
+  it('should navigate to home component when accessing empty path', async () => {
+    await router.navigate(['']);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    
+    expect(location.path()).toBe('/');
+    const component = fixture.debugElement.query(By.directive(MockPeopleComponent));
+    expect(component).toBeTruthy('Home component should be displayed');
   });
 
   it('should have proper ARIA labels for accessibility', () => {

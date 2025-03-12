@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Department, PersonViewModel } from '../../models/person-view-model';
+import { PersonViewModel } from '../../models/person-view-model';
+
 import { PersonService } from '../../services/person.service';
 import { CommonModule } from '@angular/common';
 
@@ -11,14 +12,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule]
 })
-export class PersonFormComponent implements OnInit {
+export class PersonFormComponent implements OnInit, OnChanges {
   @Input() person: PersonViewModel = {} as PersonViewModel;
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
-  @Output() deleted = new EventEmitter<void>();
 
   personForm: FormGroup;
-  departments: Department[] = [];
+  departments: { id: number; name: string; }[] = [];
   isNew = true;
   errorMessage = '';
 
@@ -29,11 +29,44 @@ export class PersonFormComponent implements OnInit {
     this.personForm = this.createForm();
   }
 
+  private updateFormWithPersonData(): void {
+    if (this.person) {
+      this.isNew = !this.person.id;
+      
+      // Handle the date conversion
+      let formattedDate = '';
+      if (this.person.dateOfBirth) {
+        // Try to parse the date string
+        const date = new Date(this.person.dateOfBirth);
+        if (!isNaN(date.getTime())) {
+          formattedDate = date.toISOString().split('T')[0];
+        }
+      }
+      
+      // Update form values
+      this.personForm.patchValue({
+        firstName: this.person.firstName || '',
+        lastName: this.person.lastName || '',
+        dateOfBirth: formattedDate,
+        departmentId: this.person.departmentId ? this.person.departmentId.toString() : ''
+      }, { emitEvent: false });
+    }
+  }
+
+  ngOnChanges(): void {
+    // Always update form when person input changes
+    this.updateFormWithPersonData();
+    // Reset form state
+    this.personForm.markAsPristine();
+    this.personForm.markAsUntouched();
+    this.errorMessage = '';
+  }
+
   ngOnInit(): void {
     this.loadDepartments();
     this.isNew = !this.person.id;
     if (!this.isNew) {
-      this.personForm.patchValue(this.person);
+      this.updateFormWithPersonData();
     }
   }
 
@@ -57,19 +90,51 @@ export class PersonFormComponent implements OnInit {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-      dateOfBirth: ['', [Validators.required, this.ageValidator.bind(this)]],
-      departmentId: ['', [Validators.required]]
+      firstName: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(20)
+      ]],
+      lastName: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(20)
+      ]],
+      dateOfBirth: ['', [
+        Validators.required,
+        this.ageValidator.bind(this)
+      ]],
+      departmentId: ['', [
+        Validators.required,
+        (control: AbstractControl): ValidationErrors | null => {
+          const value = control.value;
+          if (!value) return null;
+          const numValue = Number(value);
+          if (isNaN(numValue)) return { invalidDepartment: true };
+          const department = this.departments.find(d => d.id === numValue);
+          return department ? null : { invalidDepartment: true };
+        }
+      ]]
     });
   }
 
   private loadDepartments(): void {
     this.personService.getDepartments().subscribe({
-      next: (departments) => {
+      next: (departments: {id: number; name: string;}[]) => {
         this.departments = departments;
+        // If editing an existing person, find and set their department name
+        if (this.person && this.person.departmentId) {
+          const department = departments.find((d: {id: number; name: string;}) => d.id === this.person.departmentId);
+          if (department) {
+            this.person.departmentName = department.name;
+            // Update the form if it's already initialized
+            if (this.personForm) {
+              this.updateFormWithPersonData();
+            }
+          }
+        }
       },
-      error: (error) => {
+      error: (error: Error) => {
         console.error('Error loading departments:', error);
         this.errorMessage = 'Failed to load departments';
       }
@@ -78,16 +143,44 @@ export class PersonFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.personForm.valid) {
+      const formValue = this.personForm.value;
+      const department = this.departments.find(d => d.id === Number(formValue.departmentId));
+      
+      if (!department) {
+        this.errorMessage = 'Please select a valid department';
+        return;
+      }
+      
+      // Validate name lengths
+      if (formValue.firstName.length < 2 || formValue.firstName.length > 20) {
+        this.errorMessage = 'First name must be between 2 and 20 characters';
+        return;
+      }
+      if (formValue.lastName.length < 2 || formValue.lastName.length > 20) {
+        this.errorMessage = 'Last name must be between 2 and 20 characters';
+        return;
+      }
+      
+      // Ensure date is properly formatted and validated
+      const dateOfBirth = new Date(formValue.dateOfBirth);
+      if (this.ageValidator({ value: dateOfBirth } as AbstractControl)) {
+        this.errorMessage = 'Person must be at least 16 years old';
+        return;
+      }
+      
       const personData: PersonViewModel = {
-        ...this.personForm.value,
-        id: this.person.id
+        ...formValue,
+        id: this.person.id,
+        departmentId: department.id,
+        departmentName: department.name,
+        dateOfBirth: dateOfBirth.toISOString()
       };
 
-      const action = this.isNew
+      const saveAction = this.isNew
         ? this.personService.create(personData)
         : this.personService.update(personData);
 
-      action.subscribe({
+      saveAction.subscribe({
         next: () => {
           this.saved.emit();
         },
@@ -101,19 +194,7 @@ export class PersonFormComponent implements OnInit {
     }
   }
 
-  onDelete(): void {
-    if (this.person.id) {
-      this.personService.delete(this.person.id).subscribe({
-        next: () => {
-          this.deleted.emit();
-        },
-        error: (error) => {
-          console.error('Error deleting person:', error);
-          this.errorMessage = 'Failed to delete person';
-        }
-      });
-    }
-  }
+
 
   onCancel(): void {
     this.cancelled.emit();
