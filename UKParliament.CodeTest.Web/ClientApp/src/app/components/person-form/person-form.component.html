@@ -50,6 +50,9 @@
       <div class="error" *ngIf="personForm.get('departmentId')?.errors?.['required'] && personForm.get('departmentId')?.touched">
         Department is required
       </div>
+      <div class="error" *ngIf="personForm.get('departmentId')?.errors?.['invalidDepartment'] && personForm.get('departmentId')?.touched">
+        Please select a valid department
+      </div>
     </div>
 
     <div class="error-message" *ngIf="errorMessage">
@@ -57,11 +60,10 @@
     </div>
 
     <div class="button-group">
-      <button type="submit" class="submit-button" [disabled]="!personForm.valid">
+      <button type="submit" class="btn-parliament-primary" [disabled]="!personForm.valid">
         {{isNew ? 'Create' : 'Save'}}
       </button>
-      <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
-      <button type="button" class="delete-button" *ngIf="!isNew" (click)="onDelete()">Delete</button>
+      <button type="button" class="btn-parliament-secondary" (click)="onCancel()">Cancel</button>
     </div>
   </form>
 </div>

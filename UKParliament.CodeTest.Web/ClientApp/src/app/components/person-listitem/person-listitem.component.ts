@@ -39,8 +39,5 @@ export class PersonListitemComponent {
     this.refreshList.emit();
   }
 
-  onPersonDeleted(): void {
-    this.closeEditModal();
-    this.refreshList.emit();
-  }
+
 }

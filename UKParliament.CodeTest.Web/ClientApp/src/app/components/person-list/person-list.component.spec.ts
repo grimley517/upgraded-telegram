@@ -20,7 +20,7 @@ describe('PersonListComponent', () => {
       lastName: 'Doe',
       dateOfBirth: '1990-01-01',
       departmentId: 1,
-      department: { id: 1, name: 'IT' }
+      departmentName: 'Information Technology'
     },
     {
       id: 2,
@@ -28,7 +28,7 @@ describe('PersonListComponent', () => {
       lastName: 'Smith',
       dateOfBirth: '1992-02-02',
       departmentId: 2,
-      department: { id: 2, name: 'HR' }
+      departmentName: 'Human Resources'
     }
   ];
 

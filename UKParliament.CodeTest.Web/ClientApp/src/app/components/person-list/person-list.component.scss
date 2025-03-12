@@ -1,4 +1,4 @@
-@import '../../../styles';
+@import '../../../styles.scss';
 
 .person-list-container {
   display: flex;
@@ -48,7 +48,7 @@
 .person-item {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid $parliament-purple;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
@@ -80,7 +80,7 @@
     bottom: 15px;
     color: $parliament-purple;
     text-decoration: none;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     padding: 5px 10px;
     border-radius: 4px;
     background-color: transparent;
@@ -109,6 +109,6 @@
 .no-people {
   text-align: center;
   padding: 2rem;
-  background-color: #f5f5f5;
+  background-color: $parliament-white;
   border-radius: 4px;
 }

@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { PersonFormComponent } from './person-form.component';
 import { PersonService } from '../../services/person.service';
-import { Department, PersonViewModel } from '../../models/person-view-model';
+import { PersonViewModel } from '../../models/person-view-model';
+
 import { of, throwError } from 'rxjs';
 
 describe('PersonFormComponent', () => {
@@ -10,9 +11,11 @@ describe('PersonFormComponent', () => {
   let fixture: ComponentFixture<PersonFormComponent>;
   let personService: jasmine.SpyObj<PersonService>;
 
-  const mockDepartments: Department[] = [
-    { id: 1, name: 'IT' },
-    { id: 2, name: 'HR' }
+  const mockDepartments: { id: number; name: string; }[] = [
+    { id: 1, name: 'Information Technology' },
+    { id: 2, name: 'Human Resources' },
+    { id: 3, name: 'Finance' },
+    { id: 4, name: 'Administration' }
   ];
 
   const mockPerson: PersonViewModel = {
@@ -21,15 +24,15 @@ describe('PersonFormComponent', () => {
     lastName: 'Doe',
     dateOfBirth: '2000-01-01',
     departmentId: 1,
-    department: mockDepartments[0]
+    departmentName: mockDepartments[0].name
   };
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('PersonService', ['create', 'update', 'delete', 'getDepartments']);
+    const spy = jasmine.createSpyObj('PersonService', ['create', 'update', 'getDepartments', 'getById']);
     spy.getDepartments.and.returnValue(of(mockDepartments));
     spy.create.and.returnValue(of(mockPerson));
     spy.update.and.returnValue(of(mockPerson));
-    spy.delete.and.returnValue(of(void 0));
+    spy.getById.and.returnValue(of(mockPerson));
 
     await TestBed.configureTestingModule({
       imports: [
@@ -196,26 +199,6 @@ describe('PersonFormComponent', () => {
     component.onSubmit();
     
     expect(component.errorMessage).toBe('Failed to save person');
-  });
-
-  it('should delete person', () => {
-    const deletedSpy = jasmine.createSpy('deleted');
-    component.deleted.subscribe(deletedSpy);
-    component.person = mockPerson;
-    
-    component.onDelete();
-    
-    expect(personService.delete).toHaveBeenCalledWith(mockPerson.id!);
-    expect(deletedSpy).toHaveBeenCalled();
-  });
-
-  it('should handle error when deleting person', () => {
-    personService.delete.and.returnValue(throwError(() => new Error('Failed to delete')));
-    component.person = mockPerson;
-    
-    component.onDelete();
-    
-    expect(component.errorMessage).toBe('Failed to delete person');
   });
 
   it('should emit cancelled event when cancel is clicked', () => {

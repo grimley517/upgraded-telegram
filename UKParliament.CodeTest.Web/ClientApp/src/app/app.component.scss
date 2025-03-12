@@ -1,5 +1,5 @@
 
-@import '../../styles';
+@import '../styles.scss';
 
 .parliament-navbar {
   background-color: $parliament-purple;
@@ -15,6 +15,9 @@
   .navbar-logo {
     height: 40px;
     width: auto;
+    img{
+      color: $parliament-white;
+    }
   }
 
   .navbar-title {

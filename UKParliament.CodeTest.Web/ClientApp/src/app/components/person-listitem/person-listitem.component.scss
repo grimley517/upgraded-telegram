@@ -1,4 +1,4 @@
-@import '../../../styles';
+@import '../../../styles.scss';
 
 .person-listitem {
   display: flex;
@@ -31,7 +31,7 @@
   }
 
   .modal-header {
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid $parliament-purple;
     padding: 1rem;
 
     .modal-title {
